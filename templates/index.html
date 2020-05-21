@@ -5,13 +5,24 @@
 {% endblock %}
 
 {% block body %}
+
+    <p> {{message}} </p>
+
     <p>
       Please input your Login Credential
     </p>
-
     <form action="{{ url_for('loggedin') }}" method="post">
         <input type="text" name="name" placeholder="Enter Your Name">
         <input type="password" name="password" placeholder="Password">
         <button>Submit</button>
     </form>
+
+    <p>
+      Please sign up if do not have account yet
+    </p>
+    <a href="{{ url_for('signup') }}">
+        <button>Sign Up</button>
+    </a>
+
+
 {% endblock %}

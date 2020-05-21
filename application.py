@@ -30,7 +30,8 @@ class User:
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    message = " "
+    return render_template("index.html", message=message)
 
 @app.route("/loggedin", methods=["POST"])
 def loggedin():
@@ -43,6 +44,10 @@ def loggedin():
     if matchuser.userpass == userpass:
         return render_template("loggedin.html", name=username, password=userpass)
     else:
-        return render_template("index.html")
+        message = "Your username and password do not matched. Please try again."
+        return render_template("index.html", message=message)
 
-#    return render_template("loggedin.html", name=name, password=password)
+@app.route("/logout")
+def logout():
+    message = "You are logged out. Good Bye!"
+    return render_template("index.html", message=message)
