@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+    Hello!
+{% endblock %}
+
+{% block body %}
+    <p> How are you today {{ name }} {{password}}? </p>
+
+    <a href="{{ url_for('index') }}">
+        <button>Log Out</button>
+    </a>
+{% endblock %}
