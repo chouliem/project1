@@ -39,7 +39,7 @@ def loggedin():
     userpass = request.form.get("password")
 # checking if user exists and if exists check if password is matched
     matchuser = db.execute("select userid, username, userpass from userinfo where username = :username", {"username": username}).fetchone()
-#    print (f"{matchuser.userpass}")
+# print (f"{matchuser.userpass}")
 
     if matchuser.userpass == userpass:
         return render_template("loggedin.html", name=username, password=userpass)
@@ -50,4 +50,22 @@ def loggedin():
 @app.route("/logout")
 def logout():
     message = "You are logged out. Good Bye!"
+    return render_template("index.html", message=message)
+
+@app.route("/signup")
+def signup():
+    message = " "
+    return render_template("signup.html", message=message)
+
+@app.route("/signup2", methods=["POST"])
+def signup2():
+    username = request.form.get("name")
+    userpass = request.form.get("password")
+    # create new user
+    db.execute("INSERT INTO userinfo (username, userpass) VALUES (:username, :userpass)",
+        {"username": username, "userpass": userpass})
+    db.commit()
+    # print (f"{matchuser.userpass}")
+
+    message = "You are signed up. Please Login"
     return render_template("index.html", message=message)
