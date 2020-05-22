@@ -38,14 +38,15 @@ def loggedin():
     username = request.form.get("name")
     userpass = request.form.get("password")
 # checking if user exists and if exists check if password is matched
-    matchuser = db.execute("select userid, username, userpass from userinfo where username = :username", {"username": username}).fetchone()
+    matchuser = db.execute("select userid, username, userpass from userinfo where username = :username and userpass = :userpass", {"username": username, "userpass": userpass}).fetchone()
 # print (f"{matchuser.userpass}")
 
-    if matchuser.userpass == userpass:
-        return render_template("loggedin.html", name=username, password=userpass)
-    else:
+    if matchuser == None:
         message = "Your username and password do not matched. Please try again."
         return render_template("index.html", message=message)
+    else:
+        return render_template("loggedin.html", name=username, password=userpass)
+
 
 @app.route("/logout")
 def logout():
@@ -81,7 +82,7 @@ def search():
 #    message = "failed"
     return render_template("result.html", message=message)
 
-@app.route("/searchagain", methods=["POST"])
+@app.route("/searchagain")
 def searchagain():
     message = " "
     return render_template("result.html", message=message)
