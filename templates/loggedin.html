@@ -7,6 +7,14 @@
 {% block body %}
     <p> How are you today {{ name }} {{password}}? </p>
 
+    <p> What kind of book you are looking for?</p>
+    <form action="{{ url_for('search') }}" method="post">
+        <input type="text" name="isbn" placeholder="ISBN">
+        <input type="text" name="bktitle" placeholder="Book Title">
+        <input type="text" name="bkauthor" placeholder="Book Author">
+        <button>Submit</button>
+    </form>
+
     <a href="{{ url_for('logout') }}">
         <button>Log Out</button>
     </a>

@@ -69,3 +69,19 @@ def signup2():
 
     message = "You are signed up. Please Login"
     return render_template("index.html", message=message)
+
+@app.route("/result", methods=["POST"])
+def search():
+    isbn = request.form.get("isbn")
+    bktitle = request.form.get("bktitle")
+    bkauthor = request.form.get("bkauthor")
+
+#    print(f'{isbn}, {bktitle}, {bkauthor}")
+    message = isbn +" "+ bktitle+" "+bkauthor
+#    message = "failed"
+    return render_template("result.html", message=message)
+
+@app.route("/searchagain", methods=["POST"])
+def searchagain():
+    message = " "
+    return render_template("result.html", message=message)
