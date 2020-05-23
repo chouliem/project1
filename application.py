@@ -78,12 +78,19 @@ def search():
     bkauthor = '%{}%'.format(request.form.get("bkauthor"))
 
     #querying database depends on user input
-    results = db.execute("select * from book_db where bookid like :bookid and booktitle like :booktitle and bookauthor like :bookauthor",
-            {"bookid": bkid, "booktitle": bktitle, "bookauthor":bkauthor}).fetchall()
+    results = db.execute("select * from bookinfo where bookisbn like :bookisbn and booktitle like :booktitle and bookauthor like :bookauthor",
+            {"bookisbn": bkid, "booktitle": bktitle, "bookauthor":bkauthor}).fetchall()
 
     return render_template("result.html", results=results)
+
+@app.route("/bookpage/<int:book_id>")
+def bookpage(book_id):
+    result = db.execute("select * from bookinfo where bookid = :bookid",
+            {"bookid": book_id}).fetchone()
+
+    return render_template("bookinfo.html", result=result)
 
 @app.route("/searchagain")
 def searchagain():
     message = " "
-    return render_template("result.html", message=message)
+    return render_template("loggedin.html", message=message)
