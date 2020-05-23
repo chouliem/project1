@@ -21,7 +21,7 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 # Set up application
-class User:
+class Userinfo:
     def __init__(self, userId, userName, userPass):
         self.id = userId
         self.name = userName
@@ -73,14 +73,15 @@ def signup2():
 
 @app.route("/result", methods=["POST"])
 def search():
-    isbn = request.form.get("isbn")
-    bktitle = request.form.get("bktitle")
-    bkauthor = request.form.get("bkauthor")
+    bkid = '%{}%'.format(request.form.get("bkid"))
+    bktitle = '%{}%'.format(request.form.get("bktitle"))
+    bkauthor = '%{}%'.format(request.form.get("bkauthor"))
 
-#    print(f'{isbn}, {bktitle}, {bkauthor}")
-    message = isbn +" "+ bktitle+" "+bkauthor
-#    message = "failed"
-    return render_template("result.html", message=message)
+    #querying database depends on user input
+    results = db.execute("select * from book_db where bookid like :bookid and booktitle like :booktitle and bookauthor like :bookauthor",
+            {"bookid": bkid, "booktitle": bktitle, "bookauthor":bkauthor}).fetchall()
+
+    return render_template("result.html", results=results)
 
 @app.route("/searchagain")
 def searchagain():
