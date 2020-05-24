@@ -37,6 +37,7 @@ def main():
 # Part below to test database access for bookinfo
 # Query base on ('0441012183', 'Dead to the World', 'Charlaine Harris', 2004)
 #    bkid =''
+#    bkauthor = ''
     bkid = '%1012183%'
     bktitle = '%Dead%'
     bkauthor = '%Harris%'
@@ -49,6 +50,12 @@ def main():
 
 #   booktitle & bookauthor query
     results = db.execute("select * from bookinfo where booktitle like :booktitle and bookauthor like :bookauthor", {"booktitle": bktitle, "bookauthor":bkauthor}).fetchall()
+    rowcount = db.execute("select * from bookinfo where booktitle like :booktitle and bookauthor like :bookauthor", {"booktitle": bktitle, "bookauthor":bkauthor}).rowcount
+
+    if rowcount == 0:
+        print ("no result ", rowcount)
+    else:
+        print ("Found matched :", rowcount)
     # for result in results:
     #     print (result)
 

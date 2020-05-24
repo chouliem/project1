@@ -6,6 +6,7 @@
 
 {% block body %}
     <p> How are you today {{ name }} {{password}}? </p>
+    <p> {{message}}</p>
 
     <p> What kind of book you are looking for?</p>
     <form action="{{ url_for('search') }}" method="post">
