@@ -45,7 +45,7 @@ def index():
     message = " "
     return render_template("index.html", message=message)
 
-@app.route("/loggedin", methods=["POST"])
+@app.route("/loggedin", methods=["POST", "GET"])
 def loggedin():
     username = request.form.get("name")
     userpass = request.form.get("password")
@@ -57,11 +57,19 @@ def loggedin():
         message = "Your username and password do not matched. Please try again."
         return render_template("index.html", message=message)
     else:
-        return render_template("loggedin.html", name=username, password=userpass)
+        if session.get("loggedinusers") is None:
+            session["loggedinusers"] = []
+        if request.method == "POST":
+            user = matchuser.userid
+            session["loggedinusers"].append(user)
+            # session["loggedinusers"] = user
+
+        return render_template("loggedin.html", name=username, password=userpass, id=matchuser.userid)
 
 #Route for logging out
 @app.route("/logout")
 def logout():
+    session.pop("loggedinusers", None)
     message = "You are logged out. Good Bye!"
     return render_template("index.html", message=message)
 
@@ -125,6 +133,31 @@ def bookpage(book_id):
 @app.route("/searchagain")
 def searchagain():
     message = " "
+    return render_template("loggedin.html", message=message)
+
+
+@app.route("/ratebook/<int:book_id>", methods=["POST"])
+def ratebook(book_id):
+    userrate = request.form.get("userrate")
+    userreview = request.form.get("userreview")
+    userid = session["loggedinusers"][0]
+
+    #make sure book requested information is in my system.
+    result = db.execute("select * from bookinfo where bookid = :bookid",
+            {"bookid": book_id}).rowcount
+
+    if result == 1:
+        #check if a particular user had reviewed a particular book, if he had then can't review again, else he will review the book.
+        reviewed = db.execute("select * from bkreview where book_id = :book_id and reviewby = :userid", {"book_id": book_id, "userid": userid}).rowcount
+
+        if reviewed == 0:
+            db.execute("INSERT INTO bkreview (book_id, review, starred, reviewby, starredby) VALUES (:book_id, :review, :starred, :reviewby, :starredby)",
+                {"book_id": book_id, "review": userreview, "starred": userrate, "reviewby": userid, "starredby": userid})
+            db.commit()
+            message = "Thank you for the review"
+        else:
+            message = "Sorry you had reviewed this book previously"
+    # message = (f"{userrate} and {userreview} and {userid}")
     return render_template("loggedin.html", message=message)
 
 @app.route("/api/<string:isbn>")

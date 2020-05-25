@@ -15,5 +15,14 @@
         <li>Rating: {{averating}} stars out of {{ratingcount}} rating</li>
     </ul>
 
+    <p>Please rate this book</p>
+        
+    <form action="{{ url_for('ratebook', book_id=result.bookid) }}" method="POST">
+        <p><input type="text" name="userrate" placeholder="Please input (1-5)"></p>
+        <p><textarea name="userreview" rows="5" cols="60" placeholder="Please enter your comment"></textarea></p>
+        <p><button>Submit</button></p>
+    </form>
+
+
 
 {% endblock %}
